@@ -1,4 +1,4 @@
-package rocks.nt.apm.jmeter.config.influxdb;
+package rocks.nt.apm.jmeter.v2.config.influxdb;
 
 /**
  * Constants (Tag, Field, Measurement) names for the virtual users measurement.

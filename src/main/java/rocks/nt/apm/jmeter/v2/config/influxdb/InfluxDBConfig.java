@@ -1,4 +1,4 @@
-package rocks.nt.apm.jmeter.config.influxdb;
+package rocks.nt.apm.jmeter.v2.config.influxdb;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.visualizers.backend.BackendListenerContext;

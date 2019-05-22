@@ -1,4 +1,4 @@
-package rocks.nt.apm.jmeter.config.influxdb;
+package rocks.nt.apm.jmeter.v2.config.influxdb;
 
 /**
  * Constants (Tag, Field, Measurement) names for the requests measurement.
@@ -43,6 +43,11 @@ public interface RequestMeasurement {
 	 *
 	 */
 	public interface Fields {
+		
+		/**
+		 * Throughput field.
+		 */
+		String TRHOUGHPUT_TIME = "throughputTime";
 		/**
 		 * Response time field.
 		 */

@@ -1,4 +1,4 @@
-package rocks.nt.apm.jmeter;
+package rocks.nt.apm.jmeter.v2;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,10 +22,10 @@ import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Point.Builder;
 
-import rocks.nt.apm.jmeter.config.influxdb.InfluxDBConfig;
-import rocks.nt.apm.jmeter.config.influxdb.RequestMeasurement;
-import rocks.nt.apm.jmeter.config.influxdb.TestStartEndMeasurement;
-import rocks.nt.apm.jmeter.config.influxdb.VirtualUsersMeasurement;
+import rocks.nt.apm.jmeter.v2.config.influxdb.RequestMeasurement;
+import rocks.nt.apm.jmeter.v2.config.influxdb.TestStartEndMeasurement;
+import rocks.nt.apm.jmeter.v2.config.influxdb.VirtualUsersMeasurement;
+import rocks.nt.apm.jmeter.v2.config.influxdb.InfluxDBConfig;
 
 /**
  * Backend listener that writes JMeter metrics to influxDB directly.
@@ -48,6 +48,8 @@ public class JMeterInfluxDBBackendListenerClient extends AbstractBackendListener
 	private static final String KEY_NODE_NAME = "nodeName";
 	private static final String KEY_SAMPLERS_LIST = "samplersList";
 	private static final String KEY_RECORD_SUB_SAMPLES = "recordSubSamples";
+	private static final String KEY_THROUGHPUT = "throughput";
+	
 
 	/**
 	 * Constants.
@@ -110,6 +112,10 @@ public class JMeterInfluxDBBackendListenerClient extends AbstractBackendListener
 	 * Indicates whether to record Subsamples
 	 */
 	private boolean recordSubSamples;
+	
+	private Long timeDiffStartTest;
+	
+	private Long timeDiffEndTest;
 
 	/**
 	 * Processes sampler results.
@@ -139,6 +145,7 @@ public class JMeterInfluxDBBackendListenerClient extends AbstractBackendListener
 						.tag(RequestMeasurement.Tags.RUN_ID, runId)
 						.tag(RequestMeasurement.Tags.TEST_NAME, testName)
 						.addField(RequestMeasurement.Fields.NODE_NAME, nodeName)
+						.addField(RequestMeasurement.Fields.TRHOUGHPUT_TIME, (System.currentTimeMillis()-timeDiffStartTest ))
 						.addField(RequestMeasurement.Fields.RESPONSE_TIME, sampleResult.getTime()).build();
 				influxDB.write(influxDBConfig.getInfluxDatabase(), influxDBConfig.getInfluxRetentionPolicy(), point);
 			}
@@ -181,7 +188,8 @@ public class JMeterInfluxDBBackendListenerClient extends AbstractBackendListener
 						.tag(TestStartEndMeasurement.Tags.TEST_NAME, testName)
 						.addField(TestStartEndMeasurement.Fields.PLACEHOLDER, "1")
 						.build());
-
+		
+		timeDiffStartTest = System.currentTimeMillis();
 		parseSamplers(context);
 		scheduler = Executors.newScheduledThreadPool(1);
 
@@ -207,7 +215,7 @@ public class JMeterInfluxDBBackendListenerClient extends AbstractBackendListener
 						.tag(TestStartEndMeasurement.Tags.TEST_NAME, testName)
 						.addField(TestStartEndMeasurement.Fields.PLACEHOLDER,"1")
 						.build());
-
+		timeDiffEndTest = System.currentTimeMillis();
 		influxDB.disableBatch();
 		try {
 			scheduler.awaitTermination(30, TimeUnit.SECONDS);

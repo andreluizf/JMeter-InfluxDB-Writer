@@ -1,4 +1,4 @@
-package rocks.nt.apm.jmeter;
+package rocks.nt.apm.jmeter.v2;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,9 +22,9 @@ import org.apache.log.Logger;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Point.Builder;
 
-import rocks.nt.apm.jmeter.config.influxdb.RequestMeasurement;
-import rocks.nt.apm.jmeter.config.influxdb.TestStartEndMeasurement;
-import rocks.nt.apm.jmeter.config.influxdb.VirtualUsersMeasurement;
+import rocks.nt.apm.jmeter.v2.config.influxdb.RequestMeasurement;
+import rocks.nt.apm.jmeter.v2.config.influxdb.TestStartEndMeasurement;
+import rocks.nt.apm.jmeter.v2.config.influxdb.VirtualUsersMeasurement;
 
 /**
  * Backend listener that writes JMeter metrics to influxDB directly.
